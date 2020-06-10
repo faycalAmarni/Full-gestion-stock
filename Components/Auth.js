@@ -1,93 +1,96 @@
-import React, { Component, useState } from "react";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View
+import React, { Component } from 'react';
+import axios from 'react-native-axios';
+import {ActivityIndicator, TouchableOpacity, StyleSheet, FlatList, View, Image, Text,Alert } from 'react-native';
+import {Icon} from 'react-native-elements'
+import { FAB } from 'react-native-paper';
+import { Container, Header, Content, List, ListItem, Thumbnail,  Left, Body, Right, Button } from 'native-base';
+import UserItem from './UserItem'
 
-} from "react-native";
-import { Button } from 'react-native-paper';
+export default class Auth extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      isLoading : true,
+      users: [],
+    }
+  }
 
-const Auth = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  return (
-    <View style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={{fontWeight:'bold', fontWeight:'bold'}}>Supprimer ce produit !</Text>
-            <Text style={styles.modalText}>La suppression de votre produit est irréversible !</Text>
-            <Button  mode="text" onPress={() => {setModalVisible(!modalVisible);}}>
-              Supprimer
-            </Button>
-            <Button  mode="text" onPress={() => {setModalVisible(!modalVisible);}}>
-              Annuler
-            </Button>
-          
+
+
+  componentDidMount(){
+    {this._getUsers()}
+  }
+
+  _getUsers = () => {
+    var self = this;
+    axios.get('https://backend-csc.herokuapp.com/api/Users/')
+     .then(function (response) {
+       self.setState({users: response.data, isLoading:false,})
+     })
+    .catch(function (error) {
+       console.log(error);
+    });
+  }
+
+  componentDidUpdate(){
+    {this._getUsers()}
+  }
+
+  _displayLoading() {
+     if (this.state.isLoading) {
+       return (
+         <View style={styles.loading_container}>
+           <ActivityIndicator size='large' />
           </View>
+       )
+     }
+   }
+
+
+  render() {
+    console.log("Users");
+    return (
+
+      <View style={{flex:1 }}>
+        {this._displayLoading()}
+        <FlatList
+            data={this.state.users}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({item}) => <UserItem user={item}
+             />}
+        />
+        <View >
+          <FAB
+             style={styles.fab}
+             large
+             icon="plus"
+             onPress={() => {}}
+           />
         </View>
-      </Modal>
 
-      <TouchableHighlight
-        style={styles.openButton}
-        onPress={() => {
-          setModalVisible(true);
-        }}
-      >
-        <Text style={styles.textStyle}>Show Modal</Text>
-      </TouchableHighlight>
-    </View>
-  );
-};
+      </View>
 
+    );
+  }
+}
 const styles = StyleSheet.create({
-  centeredView: {
+  container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
   },
-  modalView: {
-    height: 200,
-    width : 300,
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
+  fab: {
+    backgroundColor:"#009387",
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 10,
   },
-  openButton: {
-    backgroundColor: "#F194FF",
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center"
+  loading_container: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 100,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
-
-export default Auth

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import Product from "./Product"
 import axios from 'react-native-axios';
-import {Alert} from 'react-native'
-import {View,Button, Text,  Container, Header, Content, Form, Item, Input, Label, Toast, Root } from 'native-base';
+import  LinearGradient  from 'react-native-linear-gradient';
+import {Alert,Button,TouchableOpacity,StyleSheet} from 'react-native'
+import {View, Text,  Container, Header, Content, Form, Item, Input, Label, Toast, Root } from 'native-base';
 export default class ProductUpdate extends Component {
 
   constructor(props){
@@ -33,11 +34,11 @@ export default class ProductUpdate extends Component {
       return (
         this.state.nom.length > 0
           && this.state.quantite.length > 0
-          && this.state.quantite > 0
+          && this.state.quantite >= 0
           && this.state.prixAchat.length > 0
-          && this.state.prixAchat > 0
+          && this.state.prixAchat >= 0
           && this.state.prixVente.length > 0
-          && this.state.prixVente > 0
+          && this.state.prixVente >= 0
           )
     }
   _updateProduct(id){
@@ -53,7 +54,7 @@ export default class ProductUpdate extends Component {
         .then(function (response) {
 
             Toast.show({
-                    text: "Ajouter avec succes !",
+                    text: "Modifier avec succes !",
                     buttonText: "Ok",
                     type: "success"
                   })
@@ -64,7 +65,7 @@ export default class ProductUpdate extends Component {
         });
         setTimeout(function(){
           that.props.navigation.navigate("Product")
-        }, 3000)
+        }, 2000)
     }
     else{
       Toast.show({
@@ -80,7 +81,7 @@ export default class ProductUpdate extends Component {
     return (
     <Root>
       <Container >
-        <Content>
+        <Content style={{marginTop:20}}>
           <Form >
             <Label style={{margin:5, marginLeft:10, fontWeight:"bold"}}>Nom du produit *</Label>
             <Item rounded style={{margin:15, marginLeft:15}}>
@@ -111,9 +112,13 @@ export default class ProductUpdate extends Component {
             </Item>
 
             <View   style={{margin:25, marginLeft:15, width:100}}>
-                <Button rounded onPress={() => {this._updateProduct(produit.id)}}>
-                  <Text>Modifier</Text>
-                </Button>
+                <TouchableOpacity style={styles.signIn} onPress={() => {this._updateProduct(produit.id)}} >
+                    <LinearGradient   colors={['#08d4c4', '#01ab9d']}   style={styles.signIn}  >
+                        <Text style={[styles.textSign, {
+                            color:'#fff'
+                        }]}>Modifier</Text>
+                    </LinearGradient>
+                </TouchableOpacity>
             </View>
 
           </Form>
@@ -123,3 +128,21 @@ export default class ProductUpdate extends Component {
     );
   }
 }
+const styles = StyleSheet.create({
+
+    button: {
+        alignItems: 'center',
+        marginTop: 50
+    },
+    signIn: {
+        width: '100%',
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10
+    },
+    textSign: {
+        fontSize: 18,
+        fontWeight: 'bold'
+    }
+  });

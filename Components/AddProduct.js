@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import  LinearGradient  from 'react-native-linear-gradient';
+import {Alert,Button,TouchableOpacity,StyleSheet} from 'react-native'
 import Product from "./Product"
 import axios from 'react-native-axios';
-import {Alert} from 'react-native'
-import {View,Button, Text,  Container, Header, Content, Form, Item, Input, Label, Toast, Root } from 'native-base';
+import {View,  Text,  Container, Header, Content, Form, Item, Input, Label, Toast, Root } from 'native-base';
 export default class AddProduct extends Component {
 
   constructor(props){
@@ -32,21 +33,21 @@ export default class AddProduct extends Component {
     return (
           this.state.nom.length > 0
             && this.state.quantite.length > 0
-            && this.state.quantite > 0
+            && this.state.quantite >= 0
             && this.state.prixAchat.length > 0
-            && this.state.prixAchat > 0
+            && this.state.prixAchat >= 0
             && this.state.prixVente.length > 0
-            && this.state.prixVente > 0
+            && this.state.prixVente >= 0
         )
   }
   _addProduct(){
-
-    if (this._isMissing()){
+    let that = this
+    if (that._isMissing()){
       axios.post('https://backend-csc.herokuapp.com/api/Produits/', {
-      nom: this.state.nom,
-      quantite : this.state.quantite,
-      prixAchat : this.state.prixAchat,
-      prixVente : this.state.prixVente
+      nom: that.state.nom,
+      quantite : that.state.quantite,
+      prixAchat : that.state.prixAchat,
+      prixVente : that.state.prixVente
       })
       .then(function (response) {
         //show  succes Toast
@@ -56,15 +57,15 @@ export default class AddProduct extends Component {
                 type: "success"
               })
         //Reset all states
-        this.updateNom("")
-        this.updateQuantite("")
-        this.updatePrixAchat("")
-        this.updatePrixVente("")
+        that.updateNom("")
+        that.updateQuantite("")
+        that.updatePrixAchat("")
+        that.updatePrixVente("")
       })
       .catch(function (error) {
         console.log(error.response);
       });
-    
+
     }
     else{
       Toast.show({
@@ -79,36 +80,44 @@ export default class AddProduct extends Component {
     return (
      <Root>
       <Container >
-        <Content>
+        <Content style={{marginTop:20}}>
           <Form >
+            <Label style={{margin:5, marginLeft:10, fontWeight:"bold"}}>Nom du produit *</Label>
             <Item rounded style={{margin:15, marginLeft:15}}>
-              <Input placeholder="  Nom du produit *"
+              <Input
                     onChangeText={this.updateNom}
                     value={this.state.nom} />
             </Item>
+            <Label style={{margin:5, marginLeft:10, fontWeight:"bold"}}>Quantite *</Label>
             <Item rounded style={{margin:15, marginLeft:15}} >
-              <Input placeholder="  Quantite *"
+              <Input
                       onChangeText={this.updateQuantite}
                       value={this.state.quantite}
                       keyboardType={"numeric"} />
             </Item>
+            <Label style={{margin:5, marginLeft:10, fontWeight:"bold"}}>Prix d'achat *</Label>
             <Item rounded style={{margin:15, marginLeft:15}} >
-              <Input placeholder="  Prix d'achat *"
+              <Input
                       onChangeText={this.updatePrixAchat}
                       value={this.state.prixAchat}
                       keyboardType={"numeric"}/>
             </Item>
+            <Label style={{margin:5, marginLeft:10, fontWeight:"bold"}}>Prix de Vente *</Label>
             <Item rounded style={{margin:15, marginLeft:15}} >
-              <Input  placeholder="  Prix de Vente *"
+              <Input
                       onChangeText={this.updatePrixVente}
                       value={this.state.prixVente}
                       keyboardType={"numeric"}/>
             </Item>
 
             <View   style={{margin:25, marginLeft:15, width:100}}>
-                <Button rounded onPress={() => {this._addProduct()}}>
-                  <Text>Ajouter</Text>
-                </Button>
+                  <TouchableOpacity style={styles.signIn} onPress={() => {this._addProduct()}} >
+                      <LinearGradient   colors={['#08d4c4', '#01ab9d']}   style={styles.signIn}  >
+                          <Text style={[styles.textSign, {
+                              color:'#fff'
+                          }]}>Ajouter</Text>
+                      </LinearGradient>
+                  </TouchableOpacity>
             </View>
 
           </Form>
@@ -118,3 +127,21 @@ export default class AddProduct extends Component {
     );
   }
 }
+const styles = StyleSheet.create({
+
+    button: {
+        alignItems: 'center',
+        marginTop: 50
+    },
+    signIn: {
+        width: '100%',
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10
+    },
+    textSign: {
+        fontSize: 18,
+        fontWeight: 'bold'
+    }
+  });

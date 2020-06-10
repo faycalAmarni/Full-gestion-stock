@@ -2,6 +2,7 @@ import React from 'react';
 import {ActivityIndicator, TouchableOpacity, StyleSheet, FlatList, View, Image, Text, Button,Alert } from 'react-native';
 import {Icon} from 'react-native-elements'
 import { FAB } from 'react-native-paper';
+import {Container} from 'native-base'
 import axios from 'react-native-axios';
 import ProductItem from './ProductItem'
 import AddProduct from './AddProduct'
@@ -55,23 +56,25 @@ class Product extends React.Component {
 
   render(){
   return (
-    <View style={{flex:1 }}>
-      {this._displayLoading()}
-      <FlatList
-          data={this.state.produits}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({item}) => <ProductItem produit={item} displayDetailForProduct = {this._displayDetailForProduct} />}
-      />
-      <View >
-        <FAB
-           style={styles.fab}
-           large
-           icon="plus"
-           onPress={() => this.props.navigation.navigate("AddProduct")}
-         />
-      </View>
+    <Container>
+      <View style={{flex:1 }}>
+        {this._displayLoading()}
+        <FlatList
+            data={this.state.produits}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({item}) => <ProductItem produit={item} displayDetailForProduct = {this._displayDetailForProduct} />}
+        />
+        <View >
+          <FAB
+             style={styles.fab}
+             large
+             icon="plus"
+             onPress={() => this.props.navigation.navigate("AddProduct")}
+           />
+        </View>
 
-    </View>
+      </View>
+    </Container>  
   );
 }
 }

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'react-native-axios';
-import {Alert} from 'react-native'
-import { View, Button, Text, Container, Header, Content, Form, Item, Input, Label, Toast, Root } from 'native-base';
+import  LinearGradient  from 'react-native-linear-gradient';
+import {Alert,Button,TouchableOpacity,StyleSheet} from 'react-native'
+import { View, Text, Container, Header, Content, Form, Item, Input, Label, Toast, Root } from 'native-base';
 export default class ProductSold extends Component {
 
   constructor(props){
@@ -59,7 +60,7 @@ export default class ProductSold extends Component {
       })
       .then(function (response) {
         Toast.show({
-                text: "Ajouter avec succes !",
+                text: "Transaction traitée avec succes !",
                 buttonText: "Ok",
                 type: "success"
               })
@@ -98,9 +99,13 @@ export default class ProductSold extends Component {
           </Item>
 
           <View   style={{margin:25, marginLeft:15, width:115}}>
-              <Button rounded onPress={() => {this._updateBenefice(produit)}}>
-                <Text>Confirmer</Text>
-              </Button>
+              <TouchableOpacity style={styles.signIn} onPress={() => {this._updateBenefice(produit)}} >
+                  <LinearGradient   colors={['#08d4c4', '#01ab9d']}   style={styles.signIn}  >
+                      <Text style={[styles.textSign, {
+                          color:'#fff'
+                      }]}>Confirmer</Text>
+                  </LinearGradient>
+              </TouchableOpacity>
           </View>
 
         </Form>
@@ -110,3 +115,21 @@ export default class ProductSold extends Component {
     );
   }
 }
+const styles = StyleSheet.create({
+
+    button: {
+        alignItems: 'center',
+        marginTop: 50
+    },
+    signIn: {
+        width: '100%',
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10
+    },
+    textSign: {
+        fontSize: 18,
+        fontWeight: 'bold'
+    }
+  });

@@ -1,6 +1,8 @@
 
 import React from 'react'
-import {Modal, TouchableOpacity, Share, StyleSheet, View, Text, ActivityIndicator, ScrollView, Image } from 'react-native'
+import {Modal, TouchableOpacity, Share,  StyleSheet, View, Text, ActivityIndicator, ScrollView, Image } from 'react-native'
+import  LinearGradient  from 'react-native-linear-gradient';
+import {Toast, Root} from 'native-base'
 import axios from 'react-native-axios';
 import { Button } from 'react-native-paper';
 import ProductUpdate from './ProductUpdate'
@@ -31,21 +33,29 @@ class ProductDetail extends React.Component {
 
   _deleteProduct(id){
     const url = "https://backend-csc.herokuapp.com/api/Produits/"+id+"/"
+    let that = this
     axios.delete(url)
     .then(function (response) {
-      Alert.alert("Supprimer avec succes !");
+      Toast.show({
+              text: "Ajouter avec succes !",
+              buttonText: "Ok",
+              type: "success"
+            })
 
     })
     .catch(function (error) {
       console.log(error);
     });
-    this.props.navigation.navigate("Product")
+    setTimeout(function(){
+      that.props.navigation.navigate("Product")
+    }, 1000)
   }
 
   _displayProduct() {
     const  produit = this.props.route.params.produit
     if (produit != undefined) {
       return (
+       <Root>
         <ScrollView style={styles.scrollview_container}>
           <Image
             style={styles.image}
@@ -72,7 +82,7 @@ class ProductDetail extends React.Component {
                 Ven
              </Button>
              : null
-            } 
+            }
           </View>
           <View style={styles.centeredView}>
             <Modal
@@ -87,18 +97,22 @@ class ProductDetail extends React.Component {
                 <View style={styles.modalView}>
                   <Text style={{fontWeight:'bold', fontWeight:'bold'}}>Supprimer ce produit !</Text>
                   <Text style={styles.modalText}>La suppression de votre produit est irréversible !</Text>
-                  <Button  mode="text" onPress={() => {this._deleteProduct(produit.id);}}>
-                    Supprimer
-                  </Button>
-                  <Button  mode="text" onPress={() => {this.setModalVisible(!this.state.modalVisible);}}>
-                    Annuler
-                  </Button>
+                  <View style={{flexDirection:'row'}}>
+                    <Button  mode="text"
+                            onPress={() => {this.setModalVisible(!this.state.modalVisible);}}>
+                      Annuler
+                    </Button>
+                    <Button  mode="text" onPress={() => {this._deleteProduct(produit.id);}}>
+                      Supprimer
+                    </Button>
+                  </View>
 
                 </View>
               </View>
           </Modal>
           </View>
         </ScrollView>
+      </Root>
       )
     }
   }
@@ -177,8 +191,8 @@ const styles = StyleSheet.create({
     marginTop: 22
   },
   modalView: {
-    height: 200,
-    width : 300,
+    height: 170,
+    width : 330,
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
