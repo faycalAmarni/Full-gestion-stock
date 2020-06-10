@@ -1,38 +1,93 @@
-// Components/Test.js
+import React, { Component, useState } from "react";
+import {
+  Alert,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View
 
-import React, { useEffect, useState } from 'react';
-import axios from 'react-native-axios';
-import { ActivityIndicator, FlatList, Text, View, Alert } from 'react-native';
+} from "react-native";
+import { Button } from 'react-native-paper';
 
-
-class Auth extends React.Component  {
-
-  constructor(props){
-    super(props),
-    this.state = {
-        Acteurs : [],
-    }
-  }
-  componentDidMount() {
-    axios.get(`http://localhost:8000/article/`)
-      .then(res => {
-        console.log("DIDD");
-        const nameList = res.data;
-        this.setState({ Acteurs });
-      })
-  }
-  render(){
-  const {nameList} = this.state;
-  {this.componentDidMount()}
-  console.log(this.state);
+const Auth = () => {
+  const [modalVisible, setModalVisible] = useState(false);
   return (
+    <View style={styles.centeredView}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={{fontWeight:'bold', fontWeight:'bold'}}>Supprimer ce produit !</Text>
+            <Text style={styles.modalText}>La suppression de votre produit est irréversible !</Text>
+            <Button  mode="text" onPress={() => {setModalVisible(!modalVisible);}}>
+              Supprimer
+            </Button>
+            <Button  mode="text" onPress={() => {setModalVisible(!modalVisible);}}>
+              Annuler
+            </Button>
+          
+          </View>
+        </View>
+      </Modal>
 
-    <View style={{ flex: 1, padding: 24 }}>
-
-        <Text>This is For {}</Text>
-
+      <TouchableHighlight
+        style={styles.openButton}
+        onPress={() => {
+          setModalVisible(true);
+        }}
+      >
+        <Text style={styles.textStyle}>Show Modal</Text>
+      </TouchableHighlight>
     </View>
   );
-  }
 };
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    height: 200,
+    width : 300,
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
+});
+
 export default Auth
