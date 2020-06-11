@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'react-native-axios';
+import {connect} from 'react-redux'
 import  LinearGradient  from 'react-native-linear-gradient';
 import {Alert,Button,TouchableOpacity,StyleSheet} from 'react-native'
 import { View, Text, Container, Header, Content, Form, Item, Input, Label, Toast, Root } from 'native-base';
-export default class ProductSold extends Component {
+class ProductSold extends Component {
 
   constructor(props){
     const produit = props.route.params
@@ -64,6 +65,11 @@ export default class ProductSold extends Component {
                 buttonText: "Ok",
                 type: "success"
               })
+        //dispatch action
+        //dispatch action
+        const action = {type:"UPDATE_PRODUCT", value:response.data}
+        that.props.dispatch(action)
+
       })
       .catch(function (error) {
         console.log(error);
@@ -133,3 +139,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     }
   });
+
+const mapStateToProps = (state) => {
+  return {
+      reduxProduits : state.reduxProduits
+  }
+}
+
+export default connect(mapStateToProps)(ProductSold)

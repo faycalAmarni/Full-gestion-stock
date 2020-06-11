@@ -1,8 +1,10 @@
 
 import React from 'react'
+import {connect} from 'react-redux'
 import {Modal, TouchableOpacity, Share,  StyleSheet, View, Text, ActivityIndicator, ScrollView, Image } from 'react-native'
 import  LinearGradient  from 'react-native-linear-gradient';
-import {Toast, Root} from 'native-base'
+import {Icon} from 'react-native-elements'
+import {Toast, Root, Container, Header, Content, List, ListItem, Right} from 'native-base'
 import axios from 'react-native-axios';
 import { Button } from 'react-native-paper';
 import ProductUpdate from './ProductUpdate'
@@ -31,22 +33,25 @@ class ProductDetail extends React.Component {
     }
   }
 
-  _deleteProduct(id){
-    const url = "https://backend-csc.herokuapp.com/api/Produits/"+id+"/"
+  _deleteProduct(produit){
+    const url = "https://backend-csc.herokuapp.com/api/Produits/"+produit.id+"/"
     let that = this
+    const action = {type:"DELETE_PRODUCT", value:produit}
     axios.delete(url)
     .then(function (response) {
       Toast.show({
-              text: "Ajouter avec succes !",
+              text: "Supprimer avec succes !",
               buttonText: "Ok",
               type: "success"
             })
-
+      //dispatch action
+      that.props.dispatch(action)
     })
     .catch(function (error) {
       console.log(error);
     });
     setTimeout(function(){
+
       that.props.navigation.navigate("Product")
     }, 1000)
   }
@@ -56,62 +61,85 @@ class ProductDetail extends React.Component {
     if (produit != undefined) {
       return (
        <Root>
-        <ScrollView style={styles.scrollview_container}>
-          <Image
-            style={styles.image}
-            source={require("./Chrysanthemum.jpg")}
-          />
-          <Text style={styles.title_text}>{produit.nom}</Text>
-          <Text style={styles.default_text}>Publier le </Text>
-          <Text style={styles.default_text}>Quantite : {produit.quantite} </Text>
-          <Text style={styles.default_text}>Prix de vente : {produit.prixVente} </Text>
-          <Text style={styles.default_text}>Prix d'achat : {produit.prixAchat}</Text>
-          <Text style={styles.default_text}>Bénifice : {produit.benefice}</Text>
-          <Text style={styles.default_text}>Ajouter par : </Text>
-          <View style={{flexDirection:'row', margin:15, justifyContent:'space-between'}}>
-          <Button color='red' icon='delete' mode="contained" onPress={() => {this.setModalVisible(true)}}>
-              Sup
-           </Button>
-           <Button color='green' icon='update' mode="contained"
-                    onPress={() => {this.props.navigation.navigate("ProductUpdate",produit)}}>
-               Mod
-            </Button>
-            {produit.quantite > 0 ?
-            <Button color='black' icon='shopping' mode="contained"
-                    onPress={() => {this.props.navigation.navigate("ProductSold",produit)}}>
-                Ven
-             </Button>
-             : null
-            }
-          </View>
-          <View style={styles.centeredView}>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={this.state.modalVisible}
-              onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
-              }}
-            >
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <Text style={{fontWeight:'bold', fontWeight:'bold'}}>Supprimer ce produit !</Text>
-                  <Text style={styles.modalText}>La suppression de votre produit est irréversible !</Text>
-                  <View style={{flexDirection:'row'}}>
-                    <Button  mode="text"
-                            onPress={() => {this.setModalVisible(!this.state.modalVisible);}}>
-                      Annuler
-                    </Button>
-                    <Button  mode="text" onPress={() => {this._deleteProduct(produit.id);}}>
-                      Supprimer
-                    </Button>
-                  </View>
-
+            <ScrollView style={styles.scrollview_container}>
+              <Image
+                style={styles.image}
+                source={require("../Images/Penguins.jpg")}
+              />
+              <Text style={styles.title_text}>{produit.nom}</Text>
+              <List>
+                <ListItem style={{flexDirection:"row", justifyContent:"space-between"}}>
+                  <Text style={styles.default_text}>Quantite </Text>
+                  <Text style={styles.stat_text}>{produit.quantite}</Text>
+                </ListItem>
+                <ListItem style={{flexDirection:"row", justifyContent:"space-between"}}>
+                  <Text style={styles.default_text}>Prix de vente </Text>
+                  <Text style={styles.stat_text}>{produit.prixVente} Da</Text>
+                </ListItem>
+                <ListItem style={{flexDirection:"row", justifyContent:"space-between"}}>
+                  <Text style={styles.default_text}>Prix d'achat</Text>
+                  <Text style={styles.stat_text}> {produit.prixAchat} Da</Text>
+                </ListItem>
+                <ListItem style={{flexDirection:"row", justifyContent:"space-between"}}>
+                  <Text style={styles.default_text}>Bénifice </Text>
+                  <Text style={styles.stat_text}>{produit.benefice} Da</Text>
+                </ListItem >
+                <ListItem style={{flexDirection:"row", justifyContent:"space-between"}}>
+                  <Text style={styles.default_text}>Ajouter par </Text>
+                  <Text style={styles.stat_text}>...</Text>
+                </ListItem>
+              </List>
+                <View style={{flexDirection:'row', margin:15, justifyContent:'space-between'}}>
+                  <TouchableOpacity
+                    style={[styles.touchable, {backgroundColor:'red'}]}
+                    onPress={() => {this.setModalVisible(true)}}
+                  >
+                    <Icon name={"delete"}  size={30} color="#fff" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.touchable, {backgroundColor:"#00e500"}]}
+                      onPress={() => {this.props.navigation.navigate("ProductUpdate",produit)}}
+                  >
+                    <Icon name={"update"}  size={30} color="#fff" />
+                  </TouchableOpacity>
+                  {produit.quantite > 0 ?
+                  <TouchableOpacity
+                    style={[styles.touchable, {backgroundColor:"#009387"}]}
+                    onPress={() => {this.props.navigation.navigate("ProductSold",produit)}}
+                  >
+                    <Icon name={"shopping-cart"}  size={30} color="#fff" />
+                  </TouchableOpacity>
+                  : null}
                 </View>
+              <View style={styles.centeredView}>
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={this.state.modalVisible}
+                  onRequestClose={() => {
+                    Alert.alert("Modal has been closed.");
+                  }}
+                >
+                  <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                      <Text style={{fontWeight:'bold', fontWeight:'bold'}}>Supprimer ce produit !</Text>
+                      <Text style={styles.modalText}>La suppression de votre produit est irréversible !</Text>
+                      <View style={{flexDirection:'row'}}>
+                        <Button  mode="text"
+                                onPress={() => {this.setModalVisible(!this.state.modalVisible);}}>
+                          Annuler
+                        </Button>
+                        <Button  mode="text" onPress={() => {this._deleteProduct(produit);}}>
+                          Supprimer
+                        </Button>
+                      </View>
+
+                    </View>
+                  </View>
+              </Modal>
               </View>
-          </Modal>
-          </View>
-        </ScrollView>
+            </ScrollView>
+
       </Root>
       )
     }
@@ -120,7 +148,7 @@ class ProductDetail extends React.Component {
     {this._displayProduct()}
   }
   render() {
-    console.log(this.props);
+    
 
     return (
       <View style={styles.main_container}>
@@ -133,6 +161,16 @@ class ProductDetail extends React.Component {
 const styles = StyleSheet.create({
   main_container: {
     flex: 1
+  },
+  touchable :{
+    borderWidth:1,
+    borderColor:'rgba(0,0,0,0.2)',
+    alignItems:'center',
+    justifyContent:'center',
+    width:70,
+    height:70,
+    backgroundColor:'#fff',
+    borderRadius:50,
   },
   loading_container: {
     position: 'absolute',
@@ -148,7 +186,6 @@ const styles = StyleSheet.create({
   },
   image: {
     height: 169,
-    margin: 5
   },
   title_text: {
     fontWeight: 'bold',
@@ -179,11 +216,6 @@ const styles = StyleSheet.create({
   justifyContent: 'center',
   alignItems: 'center'
 },
-  default_text: {
-    marginLeft: 5,
-    marginRight: 5,
-    marginTop: 5,
-  },
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -221,8 +253,27 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center"
+  },
+  default_text: {
+    fontWeight:"bold",
+    fontSize: 22,
+    marginLeft: 5,
+    marginRight: 5,
+    marginTop: 5,
+  },
+  stat_text : {
+    fontSize : 20,
+    color: '#666666',
+    textAlign : 'right',
   }
+
+
 })
 
+const mapStateToProps = (state) => {
+  return {
+      reduxProduits : state.reduxProduits
+  }
+}
 
-export default ProductDetail
+export default connect(mapStateToProps)(ProductDetail)

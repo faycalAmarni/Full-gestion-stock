@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import Product from "./Product"
 import axios from 'react-native-axios';
+import {connect} from 'react-redux'
 import  LinearGradient  from 'react-native-linear-gradient';
 import {Alert,Button,TouchableOpacity,StyleSheet} from 'react-native'
 import {View, Text,  Container, Header, Content, Form, Item, Input, Label, Toast, Root } from 'native-base';
-export default class ProductUpdate extends Component {
+
+class ProductUpdate extends Component {
 
   constructor(props){
     super(props)
@@ -41,9 +43,10 @@ export default class ProductUpdate extends Component {
           && this.state.prixVente >= 0
           )
     }
-  _updateProduct(id){
-    const url = "https://backend-csc.herokuapp.com/api/Produits/"+id+"/"
+  _updateProduct(produit){
+    const url = "https://backend-csc.herokuapp.com/api/Produits/"+produit.id+"/"
     let that = this
+
     if (that._isMissing()){
         axios.put(url, {
         nom: that.state.nom,
@@ -52,12 +55,14 @@ export default class ProductUpdate extends Component {
         prixVente : that.state.prixVente
         })
         .then(function (response) {
-
             Toast.show({
                     text: "Modifier avec succes !",
                     buttonText: "Ok",
                     type: "success"
                   })
+            //dispatch action
+            const action = {type:"UPDATE_PRODUCT", value:response.data}
+            that.props.dispatch(action)
 
         })
         .catch(function (error) {
@@ -112,7 +117,7 @@ export default class ProductUpdate extends Component {
             </Item>
 
             <View   style={{margin:25, marginLeft:15, width:100}}>
-                <TouchableOpacity style={styles.signIn} onPress={() => {this._updateProduct(produit.id)}} >
+                <TouchableOpacity style={styles.signIn} onPress={() => {this._updateProduct(produit)}} >
                     <LinearGradient   colors={['#08d4c4', '#01ab9d']}   style={styles.signIn}  >
                         <Text style={[styles.textSign, {
                             color:'#fff'
@@ -146,3 +151,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     }
   });
+
+const mapStateToProps = (state) => {
+  return {
+      reduxProduits : state.reduxProduits
+  }
+}
+
+export default connect(mapStateToProps)(ProductUpdate)

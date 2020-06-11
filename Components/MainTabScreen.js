@@ -6,18 +6,18 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 
-import Auth from './Auth'
+import User from './User'
 import Home from './Home'
-import DrawerS from './DrawerS'
 import Product from './Product'
 import Settings from './Settings'
-import Users from "./Users"
+
 import AddProduct from './AddProduct'
 import ProductDetail from './ProductDetail'
 import ProductUpdate from './ProductUpdate'
 import ProductSold from './ProductSold'
+import AddUser from './AddUser'
 
-const AuthStack = createStackNavigator();
+const UserStack = createStackNavigator();
 const AccStack = createStackNavigator();
 const ProductStack = createStackNavigator();
 const SettingsStack = createStackNavigator();
@@ -27,6 +27,7 @@ const Tab = createBottomTabNavigator();
 const MainTabScreen = () => (
   <Tab.Navigator
     initialRouteName="Product"
+    tabBarOptions={{ showLabel: false, activeTintColor: '#009387', }}
     >
     <Tab.Screen
       name="Product"
@@ -35,29 +36,29 @@ const MainTabScreen = () => (
         tabBarLabel: 'Home',
         tabBarColor : '#009387',
         tabBarIcon: ({ color }) => (
-          <MaterialCommunityIcons name="home" color={color} size={26} />
+          <MaterialCommunityIcons name="home" color={color} size={35} />
         ),
       }}
     />
     <Tab.Screen
-      name="Explore"
-      component={AuthStackScreen}
+      name="User"
+      component={UserStackScreen}
       options={{
-        tabBarLabel: 'Other',
+        tabBarLabel: 'Users',
         tabBarColor : '#009387',
         tabBarIcon: ({ color }) => (
-          <MaterialCommunityIcons name="account" color={color} size={26} />
+          <MaterialCommunityIcons name="account" color={color} size={35} />
         ),
       }}
     />
     <Tab.Screen
-      name="Acceuil"
+      name="Benefices"
       component={AccStackScreen}
       options={{
-        tabBarLabel: 'Updates',
+        tabBarLabel: 'Gain',
         tabBarColor : '#009387',
         tabBarIcon: ({ color }) => (
-          <MaterialCommunityIcons name="bell" color={color} size={26} />
+          <MaterialCommunityIcons name="tree" color={color} size={35} />
         ),
       }}
     />
@@ -65,10 +66,10 @@ const MainTabScreen = () => (
       name="Settings"
       component={SettingstScreen}
       options={{
-        tabBarLabel: 'Settings',
+
         tabBarColor : '#009387',
         tabBarIcon: ({ color }) => (
-          <MaterialCommunityIcons name="settings" color={color} size={26} />
+          <MaterialCommunityIcons name="settings" color={color} size={35} />
         ),
       }}
     />
@@ -80,8 +81,9 @@ export default MainTabScreen;
 
 
 
-const AuthStackScreen = ({navigation}) => (
-  <AuthStack.Navigator screenOptions = {{
+const UserStackScreen = ({navigation}) => (
+  <UserStack.Navigator screenOptions = {{
+          
           headerStyle : {
             backgroundColor : "#009387"
           },
@@ -91,14 +93,16 @@ const AuthStackScreen = ({navigation}) => (
           }
 
         }}>
-      <AuthStack.Screen name="Auth" component={Auth}
+      <UserStack.Screen name="User" component={User}
         options = {{
+          title : "Users",
           headerLeft : () => (
             <Icon.Button name="ios-menu" size={25}  backgroundColor = "#009387"
              onPress={() => {navigation.openDrawer();}} > </Icon.Button >
           )
         }}/>
-   </AuthStack.Navigator>
+      <UserStack.Screen name="AddUser" component={AddUser} options={{ title: 'Ajouter un utilisateur' }}/>
+   </UserStack.Navigator>
 )
 
 const AccStackScreen = ({navigation}) => (

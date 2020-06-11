@@ -3,7 +3,7 @@ import axios from 'react-native-axios';
 import {Modal,  TouchableOpacity, ActivityIndicator, FlatList, Text,  View, Alert, StyleSheet, Image } from 'react-native';
 import { Chip, Button } from 'react-native-paper';
 import ProductDetail from './ProductDetail'
-
+import moment from 'moment'
 class ProductItem extends React.Component  {
 
 
@@ -18,18 +18,18 @@ class ProductItem extends React.Component  {
       <View style={styles.main_container}>
           <Image
             style={styles.image}
-            source={require("./Chrysanthemum.jpg")}
+            source={require("../Images/Penguins.jpg")}
           />
          <View style={styles.content_container}>
             <View style= {styles.header_container}>
-              <Text style={styles.title_text}>{produit.nom}</Text>
+              <Text numberOfLines={2} ellipsizeMode="tail" style={styles.title_text}>{produit.nom}</Text>
             </View>
-            <View style={styles.description_container} >
-                <Text style={styles.vote_text}>Achat: {produit.prixAchat} Da</Text>
-                <Text style={styles.vote_text}>Vente: {produit.prixVente} Da</Text>
-                <Chip disable='true' style={{backgroundColor:"#009387", width:130, marginTop:3}} >
-                      {produit.quantite} disponibles</Chip>
+            <View style= {styles.date_container}>
+                <Text style={styles.date_text}>
+                {moment(new Date(produit.date)).format('DD/MM/YYYY')}
+                </Text>
             </View>
+
          </View>
 
       </View>
@@ -43,50 +43,53 @@ class ProductItem extends React.Component  {
 const styles = StyleSheet.create({
   main_container: {
     flex :1,
-    height: 190,
+    height: 110,
     flexDirection : 'row',
     paddingLeft : 5,
-    paddingRight : 5
+    paddingRight : 5,
+    marginTop: 4,
+    backgroundColor:'#FFFAFA',
+    shadowColor: "#000",
+   shadowOffset: {
+   	width: 0,
+   	height: 3,
+   },
+   shadowOpacity: 0.29,
+   shadowRadius: 4.65,
+
+   elevation: 7,
+
   },
   image: {
-   width: 120,
-   height: 180,
-   margin: 5,
-   //backgroundColor: 'gray'
+   width: 160,
+   height: 100,
+   margin: 5
  },
   content_container: {
       flex : 1,
       margin : 5
   },
   header_container: {
-    flex : 2,
+    flex : 4,
   },
   title_text: {
       fontWeight : 'bold',
       fontSize : 23,
       paddingRight : 5,
+      paddingTop: 10,
       flex : 1,
-      flexWrap : 'wrap'
+      flexWrap : 'wrap',
+      fontStyle : 'italic'
   },
-  vote_text: {
-      fontWeight : 'bold',
-      fontSize : 18,
-      color: '#666666'
 
-  },
-  description_container : {
-      flex : 7
-  },
-  description_text : {
-      fontStyle : 'italic',
-      color: '#666666'
-  },
   date_container : {
     flex : 1
   },
   date_text : {
+    fontWeight : 'bold',
+    fontSize : 14,
+    color: '#666666',
     textAlign : 'right',
-    fontSize : 14
   }
 
 })

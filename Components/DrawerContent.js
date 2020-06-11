@@ -54,7 +54,7 @@ export function DrawerContent(props){
                              />
                          )}
                          label="Home"
-                         onPress={() => {props.navigation.navigate('Auth')}}
+                         onPress={() => {props.navigation.navigate('Product')}}
                      />
                      <DrawerItem
                          icon={({color, size}) => (
@@ -64,8 +64,8 @@ export function DrawerContent(props){
                              size={size}
                              />
                          )}
-                         label="Profile"
-                         onPress={() => {props.navigation.navigate('Acceuil')}}
+                         label="Users"
+                         onPress={() => {props.navigation.navigate('User')}}
                      />
                      <DrawerItem
                          icon={({color, size}) => (
@@ -86,7 +86,7 @@ export function DrawerContent(props){
                              size={size}
                              />
                          )}
-                         label="Settings"
+                         label="Paramètres"
                          onPress={() => {props.navigation.navigate('Settings')}}
                      />
                      <DrawerItem
@@ -98,7 +98,7 @@ export function DrawerContent(props){
                              />
                          )}
                          label="Users"
-                         onPress={() => {props.navigation.navigate('Users')}}
+                         onPress={() => {}}
                      />
                  </Drawer.Section>
 

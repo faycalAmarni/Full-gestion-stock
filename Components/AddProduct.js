@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import  LinearGradient  from 'react-native-linear-gradient';
 import {Alert,Button,TouchableOpacity,StyleSheet} from 'react-native'
 import Product from "./Product"
+import {connect} from 'react-redux'
 import axios from 'react-native-axios';
 import {View,  Text,  Container, Header, Content, Form, Item, Input, Label, Toast, Root } from 'native-base';
-export default class AddProduct extends Component {
+class AddProduct extends Component {
 
   constructor(props){
     super(props)
@@ -50,6 +51,9 @@ export default class AddProduct extends Component {
       prixVente : that.state.prixVente
       })
       .then(function (response) {
+        //dispatch action
+        const action = {type:"ADD_PRODUCT", value:response.data}
+        that.props.dispatch(action)
         //show  succes Toast
         Toast.show({
                 text: "Ajouter avec succes !",
@@ -76,7 +80,7 @@ export default class AddProduct extends Component {
     }
   }
   render() {
-    console.log(this.state);
+    
     return (
      <Root>
       <Container >
@@ -145,3 +149,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     }
   });
+
+const mapStateToProps = (state) => {
+  return {
+      reduxProduits : state.reduxProduits
+  }
+}
+
+export default connect(mapStateToProps)(AddProduct)

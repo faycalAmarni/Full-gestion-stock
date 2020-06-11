@@ -1,8 +1,9 @@
 import React from 'react';
-import {ActivityIndicator, TouchableOpacity, StyleSheet, FlatList, View, Image, Text, Button,Alert } from 'react-native';
+import {StatusBar, ActivityIndicator, TouchableOpacity, StyleSheet, FlatList, View, Image, Text, Button,Alert } from 'react-native';
 import {Icon} from 'react-native-elements'
 import { FAB } from 'react-native-paper';
 import {Container} from 'native-base'
+import {connect} from 'react-redux'
 import axios from 'react-native-axios';
 import ProductItem from './ProductItem'
 import AddProduct from './AddProduct'
@@ -27,18 +28,20 @@ class Product extends React.Component {
 
   _getProduits = () => {
     var self = this;
+    console.log("Get produits");
     axios.get('https://backend-csc.herokuapp.com/api/Produits/')
      .then(function (response) {
-       self.setState({produits: response.data, isLoading:false,})
+       //self.setState({produits: response.data, isLoading:false,})
+       //dispatch action
+       const action = {type:"FIRST_INNSERT", value:response.data}
+       self.props.dispatch(action)
      })
     .catch(function (error) {
        console.log(error);
     });
   }
 
-  componentDidUpdate(){
-    {this._getProduits()}
-  }
+
 
   _displayLoading() {
      if (this.state.isLoading) {
@@ -55,12 +58,14 @@ class Product extends React.Component {
    }
 
   render(){
+
   return (
     <Container>
+      <StatusBar barStyle="light-content" backgroundColor = "#009387"/>
       <View style={{flex:1 }}>
         {this._displayLoading()}
         <FlatList
-            data={this.state.produits}
+            data={this.props.reduxProduits}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({item}) => <ProductItem produit={item} displayDetailForProduct = {this._displayDetailForProduct} />}
         />
@@ -74,7 +79,7 @@ class Product extends React.Component {
         </View>
 
       </View>
-    </Container>  
+    </Container>
   );
 }
 }
@@ -101,4 +106,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Product
+const mapStateToProps = (state) => {
+  return {
+      reduxProduits : state.reduxProduits
+  }
+}
+
+export default connect(mapStateToProps)(Product)

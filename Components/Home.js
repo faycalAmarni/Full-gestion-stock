@@ -1,19 +1,23 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, View, FlatList } from 'react-native';
 import {Text, Input, Image} from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-export default function Home() {
+import {connect} from 'react-redux'
+import Benefices from './Benefices'
+class  Home  extends Component {
+  render(){
+  //console.log(this.props.reduxProduits);
   return (
     <View style={styles.container}>
-      <View  style={{justifyContent:"center" , alignItems: "center"}}><Text h3 >Home</Text></View>
-
-      <Image
-        style={{width: 50, height: 50}}
-        source={{uri: './Chrysanthemum.jpg'}}
+    
+      <FlatList
+          data={this.props.reduxProduits}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({item}) => <Benefices produit={item}/>}
       />
     </View>
   );
+}
 }
 
 const styles = StyleSheet.create({
@@ -21,3 +25,11 @@ const styles = StyleSheet.create({
     flex: 1,
   }
 });
+
+const mapStateToProps = (state) => {
+  return {
+      reduxProduits : state.reduxProduits
+  }
+}
+
+export default connect(mapStateToProps)(Home)

@@ -5,8 +5,9 @@ import {Icon} from 'react-native-elements'
 import { FAB } from 'react-native-paper';
 import { Container, Header, Content, List, ListItem, Thumbnail,  Left, Body, Right, Button } from 'native-base';
 import UserItem from './UserItem'
+import AddUser from './AddUser'
 
-export default class Auth extends Component {
+export default class User extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -14,8 +15,6 @@ export default class Auth extends Component {
       users: [],
     }
   }
-
-
 
   componentDidMount(){
     {this._getUsers()}
@@ -48,9 +47,7 @@ export default class Auth extends Component {
 
 
   render() {
-    console.log("Users");
     return (
-
       <View style={{flex:1 }}>
         {this._displayLoading()}
         <FlatList
@@ -64,7 +61,7 @@ export default class Auth extends Component {
              style={styles.fab}
              large
              icon="plus"
-             onPress={() => {}}
+             onPress={() => this.props.navigation.navigate("AddUser")}
            />
         </View>
 
