@@ -9,7 +9,7 @@ class  Home  extends Component {
   //console.log(this.props.reduxProduits);
   return (
     <View style={styles.container}>
-    
+
       <FlatList
           data={this.props.reduxProduits}
           keyExtractor={(item) => item.id.toString()}
@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-      reduxProduits : state.reduxProduits
+    isSignout : state.logReducer.isSignout,
+    reduxProduits : state.toggleProducts.reduxProduits
   }
 }
 

@@ -154,7 +154,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-      reduxProduits : state.reduxProduits
+    isSignout : state.logReducer.isSignout,
+    reduxProduits : state.toggleProducts.reduxProduits
   }
 }
 

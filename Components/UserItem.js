@@ -49,7 +49,7 @@ export default class UserItem extends Component {
                 <Text note numberOfLines={1}>{user.username}</Text>
               </Body>
               <Right>
-               { !user.admin ?
+               { user.admin ?
                 <Button transparent onPress={() => {this._deleteUser(user.id)}} >
                   <Text>Supprimer</Text>
                 </Button>

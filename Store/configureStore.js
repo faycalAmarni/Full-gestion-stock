@@ -1,6 +1,7 @@
 // Store/configureStore.js
 
 import { createStore } from 'redux';
-import toggleProducts from './Reducers/ProduitReducer'
+import reducer from './Reducers/index'
 
-export default createStore(toggleProducts)
+
+export default createStore(reducer)

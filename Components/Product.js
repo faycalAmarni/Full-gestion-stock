@@ -58,7 +58,7 @@ class Product extends React.Component {
    }
 
   render(){
-
+  console.log("Oui",this.props.isSignout);
   return (
     <Container>
       <StatusBar barStyle="light-content" backgroundColor = "#009387"/>
@@ -108,7 +108,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-      reduxProduits : state.reduxProduits
+    isSignout : state.logReducer.isSignout,
+    reduxProduits : state.toggleProducts.reduxProduits
   }
 }
 
