@@ -34,14 +34,13 @@ class SignIn extends React.Component {
     var self = this;
     const username = self.state.username
     const password = self.state.password
-    const action = {type:"SIGN_IN"}
-
     const url = 'https://backend-csc.herokuapp.com/api/Users/'+username+","+password+"/"
     axios.get(url)
      .then(function (response) {
        //dispatch action
-       self.props.dispatch(action)
-       
+        const action = {type:"SIGN_IN",value:response.data}
+        self.props.dispatch(action)
+
      })
     .catch(function (error) {
       Toast.show({

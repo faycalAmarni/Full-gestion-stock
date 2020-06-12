@@ -13,9 +13,11 @@ import ProductSold from './ProductSold'
 class ProductDetail extends React.Component {
   constructor(props) {
     super(props)
+
     this.state = {
       isLoading: true,
       modalVisible : false,
+      addedBy : " "
     }
   }
 
@@ -33,6 +35,17 @@ class ProductDetail extends React.Component {
     }
   }
 
+  _getAdded(produit){
+    var self = this;
+    const url = "https://backend-csc.herokuapp.com/api/Users/"+produit.user+"/"
+    axios.get(url)
+     .then(function (response) {
+       self.setState({addedBy : response.data.username})
+   })
+    .catch(function (error) {
+       console.log(error);
+    });
+  }
   _deleteProduct(produit){
     const url = "https://backend-csc.herokuapp.com/api/Produits/"+produit.id+"/"
     let that = this
@@ -86,7 +99,7 @@ class ProductDetail extends React.Component {
                 </ListItem >
                 <ListItem style={{flexDirection:"row", justifyContent:"space-between"}}>
                   <Text style={styles.default_text}>Ajouter par </Text>
-                  <Text style={styles.stat_text}>...</Text>
+                  <Text style={styles.stat_text}>{this.state.addedBy}</Text>
                 </ListItem>
               </List>
                 <View style={{flexDirection:'row', margin:15, justifyContent:'space-between'}}>
@@ -144,12 +157,13 @@ class ProductDetail extends React.Component {
       )
     }
   }
-  componentDidUpdate(){
+  componentDidMount(){
+    {this._getAdded(this.props.route.params.produit)}
     {this._displayProduct()}
   }
   render() {
 
-
+    console.log(this.state.addedBy);
     return (
       <View style={styles.main_container}>
         {this._displayProduct()}

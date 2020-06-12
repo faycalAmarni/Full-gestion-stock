@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import {Icon, Avatar} from 'react-native-elements'
 import axios from 'react-native-axios';
+import {connect} from 'react-redux'
 import {StyleSheet, ScrollView, Modal, View,Alert} from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Left, Body, Right, Button } from 'native-base';
-export default class UserItem extends Component {
+
+class UserItem extends Component {
   constructor(props){
     super(props),
     this.state = {
@@ -49,7 +51,7 @@ export default class UserItem extends Component {
                 <Text note numberOfLines={1}>{user.username}</Text>
               </Body>
               <Right>
-               { user.admin ?
+               { this.props.actuelUser.admin && !user.admin  ?
                 <Button transparent onPress={() => {this._deleteUser(user.id)}} >
                   <Text>Supprimer</Text>
                 </Button>
@@ -155,3 +157,10 @@ const styles = StyleSheet.create({
     textAlign: "center"
   }
 })
+const mapStateToProps = (state) => {
+  return {
+    actuelUser : state.logReducer.actuelUser
+  }
+}
+
+export default connect(mapStateToProps)(UserItem)

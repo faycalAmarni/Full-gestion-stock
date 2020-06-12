@@ -65,7 +65,7 @@ class Product extends React.Component {
       <View style={{flex:1 }}>
         {this._displayLoading()}
         <FlatList
-            data={this.props.reduxProduits}
+            data={this.props.reduxProduits.sort((a,b) => b.date.localeCompare(a.date) )}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({item}) => <ProductItem produit={item} displayDetailForProduct = {this._displayDetailForProduct} />}
         />

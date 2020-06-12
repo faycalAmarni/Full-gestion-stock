@@ -48,7 +48,8 @@ class AddProduct extends Component {
       nom: that.state.nom,
       quantite : that.state.quantite,
       prixAchat : that.state.prixAchat,
-      prixVente : that.state.prixVente
+      prixVente : that.state.prixVente,
+      user: that.props.actuelUser.id
       })
       .then(function (response) {
         //dispatch action
@@ -80,7 +81,6 @@ class AddProduct extends Component {
     }
   }
   render() {
-
     return (
      <Root>
       <Container >
@@ -153,7 +153,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     isSignout : state.logReducer.isSignout,
-    reduxProduits : state.toggleProducts.reduxProduits
+    reduxProduits : state.toggleProducts.reduxProduits,
+    actuelUser : state.logReducer.actuelUser
   }
 }
 

@@ -11,7 +11,7 @@ class  Home  extends Component {
     <View style={styles.container}>
 
       <FlatList
-          data={this.props.reduxProduits}
+          data={this.props.reduxProduits.sort((a,b) => a.nom.localeCompare(b.nom))}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({item}) => <Benefices produit={item}/>}
       />

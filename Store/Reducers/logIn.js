@@ -1,4 +1,7 @@
-const initialState = { isSignout: true, }
+const initialState = {
+          isSignout: true,
+          actuelUser: [],
+        }
 
 function logReducer(state = initialState, action) {
 
@@ -10,6 +13,7 @@ function logReducer(state = initialState, action) {
         nextState = {
           ...state,
           isSignout: false,
+          actuelUser : action.value,
         }
         return nextState || state
 
@@ -18,6 +22,7 @@ function logReducer(state = initialState, action) {
         nextState = {
           ...state,
           isSignout: true,
+          actuelUser: [],
         }
         return nextState || state
 
