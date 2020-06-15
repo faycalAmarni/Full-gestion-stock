@@ -1,6 +1,7 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native'
+import {View, StyleSheet, Alert} from 'react-native'
 import Store from '../Store/configureStore';
+import {Avatar} from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   DrawerContentScrollView,
@@ -8,7 +9,7 @@ import {
 } from "@react-navigation/drawer"
 
 import {
-    Avatar,
+
     Title,
     Caption,
     Paragraph,
@@ -25,22 +26,24 @@ export function DrawerContent(props){
   const toggleTheme = () => {
       setIsDarkTheme(!isDarkTheme)
   }
+  const signOut = () => {
+    const action = {type:"SIGN_OUT"}
+    Store.dispatch(action)
+  }
+
   console.log(Store);
+  const user = Store.getState().logReducer.actuelUser
   return(
     <View style={{flex:1}}>
          <DrawerContentScrollView {...props}>
              <View style={styles.drawerContent}>
                       <View style={styles.userInfoSection}>
                           <View style={{flexDirection:'row',marginTop: 15}}>
-                             <Avatar.Image
-                                 source={{
-                                     uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
-                                 }}
-                                 size={50}
-                             />
+                          <Avatar rounded containerStyle={{backgroundColor:"#009387"}} size="medium"
+                              title= {user.nom.substring(0,1).toUpperCase()+user.prenom.substring(0,1).toUpperCase()} />
                               <View style={{marginLeft:15, flexDirection:'column'}}>
-                                 <Title style={styles.title}>John Doe</Title>
-                                 <Caption style={styles.caption}>@j_doe</Caption>
+                                 <Title style={styles.title}>{user.nom} {user.prenom}</Title>
+                                 <Caption style={styles.caption}>{user.username}</Caption>
                               </View>
                           </View>
                      </View>
