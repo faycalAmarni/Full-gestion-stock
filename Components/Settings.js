@@ -1,20 +1,33 @@
 import React, { Component } from 'react';
-import {TouchableOpacity, Alert} from 'react-native'
+import  {uploadProgress, FireBaseStorage, getFileLocalPath, createStorageReferenceToFile, uploadFileToFireBase}  from '../utils';
+import storage from '@react-native-firebase/storage';
+
+import {TouchableOpacity, Alert, Image, StatusBar} from 'react-native'
+import { Avatar } from 'react-native-elements';
 import {connect} from 'react-redux'
+import ImageResizer from 'react-native-image-resizer';
+import ImagePicker from 'react-native-image-picker'
 import { Container, Header, Content, Button, ListItem, Text, Icon, Left, Body, Right, Switch } from 'native-base';
  class Settings extends Component {
-
+   constructor(props) {
+    super(props)
+    this.state = {
+      avatar : require("../Images/Tulips.jpg"),
+      loading: false,
+      progress: 0,
+    }
+  }
   _signOut(){
+    Alert.alert("Oops")
     const action = {type:"SIGN_OUT"}
     this.props.dispatch(action)
-
   }
 
+
   render() {
+    //const FireBaseStorage = storage()
     return (
       <Container>
-
-        <Content>
           <ListItem icon>
             <Left>
               <Button style={{ backgroundColor: "#FF0501" }} onPress={() => {this._signOut()}}>
@@ -22,38 +35,10 @@ import { Container, Header, Content, Button, ListItem, Text, Icon, Left, Body, R
               </Button>
             </Left>
             <Body>
-              <Text>Sign Out</Text>
+              <Text>Sign Out </Text>
             </Body>
           </ListItem>
-          <ListItem icon>
-            <Left>
-              <Button style={{ backgroundColor: "#007AFF" }}>
-                <Icon active name="wifi" />
-              </Button>
-            </Left>
-            <Body>
-              <Text>Wi-Fi</Text>
-            </Body>
-            <Right>
-              <Text>GeekyAnts</Text>
-              <Icon active name="arrow-forward" />
-            </Right>
-          </ListItem>
-          <ListItem icon>
-            <Left>
-              <Button style={{ backgroundColor: "#007AFF" }}>
-                <Icon active name="bluetooth" />
-              </Button>
-            </Left>
-            <Body>
-              <Text>Bluetooth</Text>
-            </Body>
-            <Right>
-              <Text>On</Text>
-              <Icon active name="arrow-forward" />
-            </Right>
-          </ListItem>
-        </Content>
+
       </Container>
     );
   }

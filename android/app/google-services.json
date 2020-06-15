@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "780076521713",
+    "firebase_url": "https://gestion-stock-csc.firebaseio.com",
+    "project_id": "gestion-stock-csc",
+    "storage_bucket": "gestion-stock-csc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:780076521713:android:71600b511882fd057c3150",
+        "android_client_info": {
+          "package_name": "com.gestionstock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "780076521713-5e2hnja5hhs8kvmacop6dka9tn0h38v6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXcNW69uRfOHPS6CLJqadLQkBA6aSh94c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "780076521713-5e2hnja5hhs8kvmacop6dka9tn0h38v6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

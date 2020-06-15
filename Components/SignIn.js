@@ -1,6 +1,6 @@
 import React from 'react';
-import { StatusBar, StyleSheet, View, TouchableOpacity, Dimensions, Platform, TextInput } from 'react-native';
-import {Toast, Root } from 'native-base';
+import {Alert, StatusBar, StyleSheet, View, TouchableOpacity, Dimensions, Platform, TextInput } from 'react-native';
+import Toast from 'react-native-simple-toast';
 import {Text, Input, Icon} from 'react-native-elements'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -18,7 +18,6 @@ class SignIn extends React.Component {
       password:'',
       check_textInputChange: false,
       secureTextEntry:true,
-      showToast: false
     }
   }
 
@@ -43,19 +42,17 @@ class SignIn extends React.Component {
 
      })
     .catch(function (error) {
-      Toast.show({
-               text: "Something wrong with your informations !",
-               buttonText: "Ok",
-               type: "danger"
-             })
+      Alert.alert(
+                'Erreur ',
+                'Username ou Mot de passe incorrect',
+                );
       self.handlePasswordChange("")
       self.handleUsernameChange("")
     });
   }
   render(){
-  console.log(this.props);
   return (
-    <Root>
+
         <View style={styles.container}>
             <StatusBar barStyle="light-content" backgroundColor = "#009387"/>
             <View style={styles.header}>
@@ -106,7 +103,7 @@ class SignIn extends React.Component {
             </View>
 
         </View>
-    </Root>
+
   );
   }
 }

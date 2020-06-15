@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import  LinearGradient  from 'react-native-linear-gradient';
 import {Alert,Button,TouchableOpacity,StyleSheet} from 'react-native'
-import Product from "./Product"
+import Toast from 'react-native-simple-toast';
+import {Icon} from 'react-native-elements'
+import { ProgressBar, Colors } from 'react-native-paper';
+import ImagePicker from 'react-native-image-picker'
+import  {uploadProgress, getFileLocalPath, createStorageReferenceToFile, uploadFileToFireBase}  from '../utils';
 import {connect} from 'react-redux'
 import axios from 'react-native-axios';
-import {View,  Text,  Container, Header, Content, Form, Item, Input, Label, Toast, Root } from 'native-base';
+import {View,  Text,  Container, Header, Content, Form, Item, Input, Label } from 'native-base';
 class AddProduct extends Component {
 
   constructor(props){
@@ -14,7 +18,9 @@ class AddProduct extends Component {
       quantite : "",
       prixVente : "",
       prixAchat : "",
-      showToast: false
+      imageUri : "https://firebasestorage.googleapis.com/v0/b/gestion-stock-csc.appspot.com/o/price-tags_750.jpg?alt=media&token=4a4ddb54-2883-4bf9-8a4f-3e061d9e8aa9",
+      loading: false,
+      progress: 0
     }
   }
   updateNom = nom => {
@@ -29,7 +35,45 @@ class AddProduct extends Component {
   updatePrixAchat = prixAchat => {
    this.setState({ prixAchat });
   };
+  updateImageUri = imageUri => {
+   this.setState({ imageUri });
+ };
 
+    _avatarClicked() {
+      const options = {
+        noData: true,
+        maxWidth : 400,
+        maxHeight: 200,
+      };
+
+      ImagePicker.showImagePicker(options, (response) => {
+       if (response.didCancel) {}
+       else if (response.error) { console.log('Erreur : ', response.error) }
+       else {
+                 let requireSource = { uri: response.uri }
+                 //Promise.resolve(uploadFileToFireBase(response));
+                 this.monitorFileUpload(uploadFileToFireBase(response));
+         }
+     })
+    }
+  monitorFileUpload = uploadTask => {
+    let self = this
+    uploadTask.on('state_changed', snapshot => {
+      const progress = snapshot.bytesTransferred / snapshot.totalBytes
+      switch (snapshot.state) {
+        case 'running':
+          self.setState({loading: true, progress:progress})
+        break;
+        case 'success':
+            snapshot.ref.getDownloadURL().then(downloadURL => {
+            self.setState({imageUri : downloadURL})
+            self.setState({ progress:progress})
+          });
+          break;
+        default:
+          break;
+      }
+  })}
   _isMissing = () =>{
     return (
           this.state.nom.length > 0
@@ -43,29 +87,30 @@ class AddProduct extends Component {
   }
   _addProduct(){
     let that = this
+    const img = that.state.imageUri
+    console.log(img);
     if (that._isMissing()){
       axios.post('https://backend-csc.herokuapp.com/api/Produits/', {
-      nom: that.state.nom,
-      quantite : that.state.quantite,
-      prixAchat : that.state.prixAchat,
-      prixVente : that.state.prixVente,
-      user: that.props.actuelUser.id
+        nom: that.state.nom,
+        quantite : that.state.quantite,
+        prixAchat : that.state.prixAchat,
+        prixVente : that.state.prixVente,
+        imageUri: img,
+        user: that.props.actuelUser.id
+
       })
       .then(function (response) {
         //dispatch action
         const action = {type:"ADD_PRODUCT", value:response.data}
         that.props.dispatch(action)
         //show  succes Toast
-        Toast.show({
-                text: "Ajouter avec succes !",
-                buttonText: "Ok",
-                type: "success"
-              })
+        Toast.show('Produit ajouté avec succès');
         //Reset all states
         that.updateNom("")
         that.updateQuantite("")
         that.updatePrixAchat("")
         that.updatePrixVente("")
+        that.setState({loading:false})
       })
       .catch(function (error) {
         console.log(error.response);
@@ -73,16 +118,16 @@ class AddProduct extends Component {
 
     }
     else{
-      Toast.show({
-               text: "Something wrong with your informations !",
-               buttonText: "Ok",
-               type: "danger"
-             })
+      Alert.alert(
+       "Erreur ! Vous avez peut-être :",
+       "1- Oublier un champ obligatoire \n2- Saisi une valeur négative",
+    );
+
     }
   }
   render() {
     return (
-     <Root>
+
       <Container >
         <Content style={{marginTop:20}}>
           <Form >
@@ -113,8 +158,17 @@ class AddProduct extends Component {
                       value={this.state.prixVente}
                       keyboardType={"numeric"}/>
             </Item>
-
-            <View   style={{margin:25, marginLeft:15, width:100}}>
+            <Label style={{margin:5, marginLeft:10, fontWeight:"bold"}}>Image</Label>
+            <TouchableOpacity
+              style={[styles.touchable, {backgroundColor:'#08d4c4'}]}
+              onPress={() => {this._avatarClicked()}}
+            >
+              <Icon name={"image"}  size={20} color="#fff" />
+            </TouchableOpacity>
+            {this.state.loading &&(
+            <ProgressBar progress={this.state.progress} color='#08d4c4' style={{width:170, margin:5}} />
+            )}
+            <View   style={{margin:25, marginLeft:145, width:100}}>
                   <TouchableOpacity style={styles.signIn} onPress={() => {this._addProduct()}} >
                       <LinearGradient   colors={['#08d4c4', '#01ab9d']}   style={styles.signIn}  >
                           <Text style={[styles.textSign, {
@@ -127,7 +181,7 @@ class AddProduct extends Component {
           </Form>
         </Content>
       </Container>
-    </Root>
+
     );
   }
 }
@@ -147,7 +201,18 @@ const styles = StyleSheet.create({
     textSign: {
         fontSize: 18,
         fontWeight: 'bold'
-    }
+    },
+    touchable :{
+      borderWidth:1,
+      borderColor:'rgba(0,0,0,0.2)',
+      alignItems:'center',
+      justifyContent:'center',
+      width:40,
+      height:40,
+      marginLeft: 16,
+      backgroundColor:'#fff',
+      borderRadius:5,
+    },
   });
 
 const mapStateToProps = (state) => {

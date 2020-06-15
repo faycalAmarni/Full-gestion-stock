@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import Product from "./Product"
 import axios from 'react-native-axios';
 import {connect} from 'react-redux'
+import Toast from 'react-native-simple-toast';
 import  LinearGradient  from 'react-native-linear-gradient';
 import {Alert,Button,TouchableOpacity,StyleSheet} from 'react-native'
-import {View, Text,  Container, Header, Content, Form, Item, Input, Label, Toast, Root } from 'native-base';
+import {View, Text,  Container, Header, Content, Form, Item, Input, Label} from 'native-base';
 
 class ProductUpdate extends Component {
 
@@ -55,11 +56,7 @@ class ProductUpdate extends Component {
         prixVente : that.state.prixVente
         })
         .then(function (response) {
-            Toast.show({
-                    text: "Modifier avec succes !",
-                    buttonText: "Ok",
-                    type: "success"
-                  })
+            Toast.show('Produit modifié avec succès');
             //dispatch action
             const action = {type:"UPDATE_PRODUCT", value:response.data}
             that.props.dispatch(action)
@@ -73,18 +70,17 @@ class ProductUpdate extends Component {
         }, 2000)
     }
     else{
-      Toast.show({
-               text: "Something wrong with your informations !",
-               buttonText: "Ok",
-               type: "danger"
-             })
+        Alert.alert(
+         "Erreur ! Vous avez peut-être :",
+         "1- Oublier un champ obligatoire \n2- Saisi une valeur négative",
+      );
     }
   }
   render() {
     const  produit = this.props.route.params
 
     return (
-    <Root>
+
       <Container >
         <Content style={{marginTop:20}}>
           <Form >
@@ -116,7 +112,7 @@ class ProductUpdate extends Component {
                       keyboardType={"numeric"}/>
             </Item>
 
-            <View   style={{margin:25, marginLeft:15, width:100}}>
+            <View   style={{margin:25, marginLeft:145, width:100}}>
                 <TouchableOpacity style={styles.signIn} onPress={() => {this._updateProduct(produit)}} >
                     <LinearGradient   colors={['#08d4c4', '#01ab9d']}   style={styles.signIn}  >
                         <Text style={[styles.textSign, {
@@ -129,7 +125,7 @@ class ProductUpdate extends Component {
           </Form>
         </Content>
       </Container>
-    </Root>
+
     );
   }
 }

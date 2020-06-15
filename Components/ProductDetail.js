@@ -1,14 +1,13 @@
 
 import React from 'react'
 import {connect} from 'react-redux'
+import Toast from 'react-native-simple-toast';
 import {Modal, TouchableOpacity, Share,  StyleSheet, View, Text, ActivityIndicator, ScrollView, Image } from 'react-native'
 import  LinearGradient  from 'react-native-linear-gradient';
 import {Icon} from 'react-native-elements'
-import {Toast, Root, Container, Header, Content, List, ListItem, Right} from 'native-base'
+import { Container, Header, Content, List, ListItem, Right} from 'native-base'
 import axios from 'react-native-axios';
 import { Button } from 'react-native-paper';
-import ProductUpdate from './ProductUpdate'
-import ProductSold from './ProductSold'
 
 class ProductDetail extends React.Component {
   constructor(props) {
@@ -52,11 +51,7 @@ class ProductDetail extends React.Component {
     const action = {type:"DELETE_PRODUCT", value:produit}
     axios.delete(url)
     .then(function (response) {
-      Toast.show({
-              text: "Supprimer avec succes !",
-              buttonText: "Ok",
-              type: "success"
-            })
+      Toast.show('Produit supprimé avec succès');
       //dispatch action
       that.props.dispatch(action)
     })
@@ -66,18 +61,18 @@ class ProductDetail extends React.Component {
     setTimeout(function(){
 
       that.props.navigation.navigate("Product")
-    }, 1000)
+    }, 2000)
   }
 
   _displayProduct() {
     const  produit = this.props.route.params.produit
     if (produit != undefined) {
       return (
-       <Root>
+
             <ScrollView style={styles.scrollview_container}>
               <Image
                 style={styles.image}
-                source={require("../Images/Penguins.jpg")}
+                source={{uri: produit.imageUri}}
               />
               <Text style={styles.title_text}>{produit.nom}</Text>
               <List>
@@ -153,7 +148,7 @@ class ProductDetail extends React.Component {
               </View>
             </ScrollView>
 
-      </Root>
+
       )
     }
   }

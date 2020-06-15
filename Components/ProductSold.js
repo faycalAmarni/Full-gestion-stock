@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'react-native-axios';
+import Toast from 'react-native-simple-toast';
 import {connect} from 'react-redux'
 import  LinearGradient  from 'react-native-linear-gradient';
 import {Alert,Button,TouchableOpacity,StyleSheet} from 'react-native'
-import { View, Text, Container, Header, Content, Form, Item, Input, Label, Toast, Root } from 'native-base';
+import { View, Text, Container, Header, Content, Form, Item, Input, Label } from 'native-base';
 class ProductSold extends Component {
 
   constructor(props){
@@ -37,19 +38,16 @@ class ProductSold extends Component {
     const benefice = (this.state.prixVente-produit.prixAchat)  * this.state.quantite
     let that = this
     if(!that._isMissing()){
-      Toast.show({
-               text: "Something wrong with your informations !",
-               buttonText: "Ok",
-               type: "danger"
-             })
+      Alert.alert(
+       "Erreur ! Vous avez peut-être :",
+       "1- Oublier un champ obligatoire \n2- Saisi une valeur négative",
+    );
     }
     else if (produit.quantite - that.state.quantite < 0) {
-      Toast.show({
-               text: "Quantité indisponible !",
-               buttonText: "Ok",
-               type: "danger"
-             })
-
+        Alert.alert(
+         "Erreur ! ",
+         " Quantité indisponible",
+      );
     }
     else{
       axios.put(url, {
@@ -60,11 +58,7 @@ class ProductSold extends Component {
         benefice : produit.benefice + benefice
       })
       .then(function (response) {
-        Toast.show({
-                text: "Transaction traitée avec succes !",
-                buttonText: "Ok",
-                type: "success"
-              })
+        Toast.show('Transaction traitée avec succès');
         //dispatch action
         //dispatch action
         const action = {type:"UPDATE_PRODUCT", value:response.data}
@@ -85,7 +79,7 @@ class ProductSold extends Component {
   render() {
     const  produit = this.props.route.params
     return (
-    <Root>
+
       <Container >
         <Content style={{marginTop:40}}>
         <Form >
@@ -104,7 +98,7 @@ class ProductSold extends Component {
                     keyboardType={"numeric"}/>
           </Item>
 
-          <View   style={{margin:25, marginLeft:15, width:115}}>
+          <View   style={{margin:25, marginLeft:140, width:115}}>
               <TouchableOpacity style={styles.signIn} onPress={() => {this._updateBenefice(produit)}} >
                   <LinearGradient   colors={['#08d4c4', '#01ab9d']}   style={styles.signIn}  >
                       <Text style={[styles.textSign, {
@@ -117,7 +111,7 @@ class ProductSold extends Component {
         </Form>
         </Content>
       </Container>
-    </Root>
+
     );
   }
 }

@@ -18,7 +18,7 @@ class ProductItem extends React.Component  {
       <View style={styles.main_container}>
           <Image
             style={styles.image}
-            source={require("../Images/Penguins.jpg")}
+            source={{uri: produit.imageUri}}
           />
          <View style={styles.content_container}>
             <View style= {styles.header_container}>

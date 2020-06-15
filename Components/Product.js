@@ -6,7 +6,7 @@ import {Container} from 'native-base'
 import {connect} from 'react-redux'
 import axios from 'react-native-axios';
 import ProductItem from './ProductItem'
-import AddProduct from './AddProduct'
+
 class Product extends React.Component {
 
   constructor(props){
@@ -31,7 +31,7 @@ class Product extends React.Component {
     console.log("Get produits");
     axios.get('https://backend-csc.herokuapp.com/api/Produits/')
      .then(function (response) {
-       //self.setState({produits: response.data, isLoading:false,})
+       self.setState({produits: response.data, isLoading:false,})
        //dispatch action
        const action = {type:"FIRST_INNSERT", value:response.data}
        self.props.dispatch(action)
@@ -58,7 +58,7 @@ class Product extends React.Component {
    }
 
   render(){
-  console.log("Oui",this.props.isSignout);
+    console.log(this.props.reduxProduits);
   return (
     <Container>
       <StatusBar barStyle="light-content" backgroundColor = "#009387"/>
