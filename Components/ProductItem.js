@@ -2,11 +2,27 @@ import React, { useEffect, useState } from 'react';
 import axios from 'react-native-axios';
 import {Modal,  TouchableOpacity, ActivityIndicator, FlatList, Text,  View, Alert, StyleSheet, Image } from 'react-native';
 import { Chip, Button } from 'react-native-paper';
+import  { getReference}  from '../utils';
 import ProductDetail from './ProductDetail'
 import moment from 'moment'
 class ProductItem extends React.Component  {
 
-
+  constructor(props){
+    super(props)
+    const produit = this.props.produit;
+    this.state = {
+      showImage : this.getTheDownloadURL(produit.imageUri)
+    }
+  }
+ getTheDownloadURL = fileName => {
+    let returnValue = ""
+    getReference(fileName)
+    .getDownloadURL()
+    .then((url) => {
+      this.setState({showImage: url})
+    })
+    .catch((e) => console.log('getting downloadURL of image error => ', e));
+  };
 
   render(){
   const produit = this.props.produit;
@@ -16,9 +32,10 @@ class ProductItem extends React.Component  {
          onPress={()=>{this.props.displayDetailForProduct(produit)}}
           >
       <View style={styles.main_container}>
+
           <Image
             style={styles.image}
-            source={{uri: produit.imageUri}}
+            source={{uri: this.state.showImage}}
           />
          <View style={styles.content_container}>
             <View style= {styles.header_container}>

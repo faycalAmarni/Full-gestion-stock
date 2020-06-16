@@ -22,15 +22,15 @@ const styles = StyleSheet.create({
 
   name_text: {
     fontWeight: 'bold',
-    fontSize: 25,
-    flex: 3,
+    fontSize: 20,
+    flex: 2,
     flexWrap: 'wrap',
     color: '#000000',
 
   },
   stat_text : {
     flex : 1,
-    fontSize : 20,
+    fontSize : 17,
     color: '#666666',
     textAlign : 'right',
   }

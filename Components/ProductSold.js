@@ -81,7 +81,7 @@ class ProductSold extends Component {
     return (
 
       <Container >
-        <Content style={{marginTop:40}}>
+        <Content style={{marginTop:20, padding: 10}}>
         <Form >
           <Label style={{margin:5, marginLeft:10, fontWeight:"bold"}}>Quantite *</Label>
           <Item rounded style={{margin:15, marginLeft:15}} >

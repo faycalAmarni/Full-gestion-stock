@@ -1,9 +1,9 @@
-
 import React from 'react'
 import {connect} from 'react-redux'
 import Toast from 'react-native-simple-toast';
 import {Modal, TouchableOpacity, Share,  StyleSheet, View, Text, ActivityIndicator, ScrollView, Image } from 'react-native'
 import  LinearGradient  from 'react-native-linear-gradient';
+import  { getReference, deleteFirebase}  from '../utils';
 import {Icon} from 'react-native-elements'
 import { Container, Header, Content, List, ListItem, Right} from 'native-base'
 import axios from 'react-native-axios';
@@ -12,13 +12,24 @@ import { Button } from 'react-native-paper';
 class ProductDetail extends React.Component {
   constructor(props) {
     super(props)
-
+    const  produit = this.props.route.params.produit
     this.state = {
       isLoading: true,
       modalVisible : false,
-      addedBy : " "
+      addedBy : " ",
+      showImage : this.getTheDownloadURL(produit.imageUri)
     }
   }
+
+  getTheDownloadURL = fileName => {
+     let returnValue = ""
+     getReference(fileName)
+     .getDownloadURL()
+     .then((url) => {
+       this.setState({showImage: url})
+     })
+     .catch((e) => console.log('getting downloadURL of image error => ', e));
+   };
 
   setModalVisible = modalVisible => {
    this.setState({ modalVisible });
@@ -54,6 +65,8 @@ class ProductDetail extends React.Component {
       Toast.show('Produit supprimé avec succès');
       //dispatch action
       that.props.dispatch(action)
+      //delete image from fire base
+      deleteFirebase(produit.imageUri)
     })
     .catch(function (error) {
       console.log(error);
@@ -72,7 +85,7 @@ class ProductDetail extends React.Component {
             <ScrollView style={styles.scrollview_container}>
               <Image
                 style={styles.image}
-                source={{uri: produit.imageUri}}
+                source={{uri: this.state.showImage}}
               />
               <Text style={styles.title_text}>{produit.nom}</Text>
               <List>

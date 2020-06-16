@@ -5,7 +5,7 @@ import Toast from 'react-native-simple-toast';
 import {Icon} from 'react-native-elements'
 import { ProgressBar, Colors } from 'react-native-paper';
 import ImagePicker from 'react-native-image-picker'
-import  {uploadProgress, getFileLocalPath, createStorageReferenceToFile, uploadFileToFireBase}  from '../utils';
+import  {getStorageReferenceFromUrl, uploadProgress, getFileLocalPath, createStorageReferenceToFile, uploadFileToFireBase}  from '../utils';
 import {connect} from 'react-redux'
 import axios from 'react-native-axios';
 import {View,  Text,  Container, Header, Content, Form, Item, Input, Label } from 'native-base';
@@ -39,7 +39,25 @@ class AddProduct extends Component {
    this.setState({ imageUri });
  };
 
+  insertHistorique = name => {
+    let that = this
+   axios.post('https://backend-csc.herokuapp.com/api/Historiques/', {
+     Genre:  "Ajouté",
+     NomProduit : "nom",
+     NomUser : that.props.actuelUser.nom,
+     PrenomUser : that.props.actuelUser.prenom,
+   })
+   .then(function (response) {
+       //I'll do something
+       console.log("Succes");
+   })
+   .catch(function (error) {
+     console.log("Erreurrr",error);
+   });
+ }
+
     _avatarClicked() {
+      let self = this
       const options = {
         noData: true,
         maxWidth : 400,
@@ -52,6 +70,10 @@ class AddProduct extends Component {
        else {
                  let requireSource = { uri: response.uri }
                  //Promise.resolve(uploadFileToFireBase(response));
+                 //console.log("Rani hna");
+                 self.setState({imageUri : response.fileName})
+
+                 //console.log(createStorageReferenceToFile(response));
                  this.monitorFileUpload(uploadFileToFireBase(response));
          }
      })
@@ -66,7 +88,7 @@ class AddProduct extends Component {
         break;
         case 'success':
             snapshot.ref.getDownloadURL().then(downloadURL => {
-            self.setState({imageUri : downloadURL})
+            //self.setState({imageUri : downloadURL})
             self.setState({ progress:progress})
           });
           break;
@@ -88,7 +110,7 @@ class AddProduct extends Component {
   _addProduct(){
     let that = this
     const img = that.state.imageUri
-    console.log(img);
+
     if (that._isMissing()){
       axios.post('https://backend-csc.herokuapp.com/api/Produits/', {
         nom: that.state.nom,
@@ -127,9 +149,8 @@ class AddProduct extends Component {
   }
   render() {
     return (
-
       <Container >
-        <Content style={{marginTop:20}}>
+        <Content style={{marginTop:20, padding: 16}}>
           <Form >
             <Label style={{margin:5, marginLeft:10, fontWeight:"bold"}}>Nom du produit *</Label>
             <Item rounded style={{margin:15, marginLeft:15}}>

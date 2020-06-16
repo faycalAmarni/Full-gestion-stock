@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
 import axios from 'react-native-axios';
 import ProductItem from './ProductItem'
 
-class Product extends React.Component {
+class SearchProduct extends React.Component {
 
   constructor(props){
     super(props)
@@ -24,17 +24,43 @@ class Product extends React.Component {
     {this._getProduits()}
   }
 
+  renderHeader = () => {
+    return (
+      <SearchBar
+        placeholder="Type Here..."
+        lightTheme
+        round
+        onChangeText={text => this.searchFilterFunction(text)}
+        autoCorrect={false}
+        value={this.state.value}
+      />
+    );
+  };
+
+  searchFilterFunction = text => {
+    this.setState({
+      value: text,
+    });
+    const newData = this.arrayholder.filter(item => {
+      const itemData = item.nom.toLowerCase();
+
+      const textData = text.toLowerCase();
+
+      return itemData.indexOf(textData) > -1;
+    });
+
+    this.setState({ produits: newData });
+  };
+
 
 
   _getProduits = () => {
     var self = this;
     axios.get('https://backend-csc.herokuapp.com/api/Produits/')
      .then(function (response) {
-       self.setState({ isLoading:false,})
+       self.setState({produits:response.data, isLoading:false,})
        self.arrayholder = response.data
-       //dispatch action
-       const action = {type:"FIRST_INNSERT", value:response.data}
-       self.props.dispatch(action)
+
      })
     .catch(function (error) {
        console.log(error);
@@ -64,9 +90,10 @@ class Product extends React.Component {
       <View style={{flex:1 }}>
         {this._displayLoading()}
         <FlatList
-            data={this.props.reduxProduits.sort((a,b) => b.date.localeCompare(a.date) )}
+            data={this.state.produits.sort((a,b) => b.date.localeCompare(a.date) )}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({item}) => <ProductItem produit={item} displayDetailForProduct = {this._displayDetailForProduct} />}
+            ListHeaderComponent={this.renderHeader}
         />
         <View >
           <FAB
@@ -112,4 +139,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(Product)
+export default connect(mapStateToProps)(SearchProduct)

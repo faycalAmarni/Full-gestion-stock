@@ -14,6 +14,7 @@ import Settings from './Settings'
 import AddProduct from './AddProduct'
 import ProductDetail from './ProductDetail'
 import ProductUpdate from './ProductUpdate'
+import SearchProduct from './SearchProduct'
 import ProductSold from './ProductSold'
 import AddUser from './AddUser'
 
@@ -62,17 +63,7 @@ const MainTabScreen = () => (
         ),
       }}
     />
-    <Tab.Screen
-      name="Settings"
-      component={SettingstScreen}
-      options={{
 
-        tabBarColor : '#009387',
-        tabBarIcon: ({ color }) => (
-          <MaterialCommunityIcons name="settings" color={color} size={35} />
-        ),
-      }}
-    />
   </Tab.Navigator>
 
 );
@@ -83,7 +74,7 @@ export default MainTabScreen;
 
 const UserStackScreen = ({navigation}) => (
   <UserStack.Navigator screenOptions = {{
-          
+
           headerStyle : {
             backgroundColor : "#009387"
           },
@@ -116,7 +107,7 @@ const AccStackScreen = ({navigation}) => (
       }
 
       }}>
-      <AccStack.Screen name="Acceuil" component={Home}
+      <AccStack.Screen name="Stats" component={Home}
         options = {{
           headerLeft : () => (
             <Icon.Button name="ios-menu" size={25}  backgroundColor = "#009387"
@@ -144,6 +135,10 @@ const ProductScreen = ({navigation}) => (
           headerLeft : () => (
             <Icon.Button name="ios-menu" size={25}  backgroundColor = "#009387"
              onPress={() => {navigation.openDrawer();}} > </Icon.Button >
+          ),
+          headerRight : () => (
+            <Icon.Button name="ios-search" size={25}  backgroundColor = "#009387"
+             onPress={() => {navigation.navigate("SearchProduct")}} > </Icon.Button >
           )
         }}
       />
@@ -151,6 +146,7 @@ const ProductScreen = ({navigation}) => (
       <ProductStack.Screen name="ProductDetail" component={ProductDetail} options={{ title: 'Détails' }}/>
       <ProductStack.Screen name="ProductUpdate" component={ProductUpdate} options={{ title: 'Modification' }}/>
       <ProductStack.Screen name="ProductSold" component={ProductSold} options={{ title: 'Une nouvelle vente' }}/>
+      <ProductStack.Screen name="SearchProduct" component={SearchProduct} options={{ title: 'Rechercher ..' }}/>
   </ProductStack.Navigator>
 )
 

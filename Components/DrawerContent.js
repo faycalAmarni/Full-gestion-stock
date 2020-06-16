@@ -31,7 +31,6 @@ export function DrawerContent(props){
     Store.dispatch(action)
   }
 
-  console.log(Store);
   const user = Store.getState().logReducer.actuelUser
   return(
     <View style={{flex:1}}>
@@ -71,17 +70,7 @@ export function DrawerContent(props){
                          label="Users"
                          onPress={() => {props.navigation.navigate('User')}}
                      />
-                     <DrawerItem
-                         icon={({color, size}) => (
-                             <Icon
-                             name="bookmark-outline"
-                             color={color}
-                             size={size}
-                             />
-                         )}
-                         label="Bookmarks"
-                         onPress={() => {props.navigation.navigate('Product')}}
-                     />
+
                      <DrawerItem
                          icon={({color, size}) => (
                              <Icon
@@ -96,26 +85,16 @@ export function DrawerContent(props){
                      <DrawerItem
                          icon={({color, size}) => (
                              <Icon
-                             name="account-check-outline"
+                             name="tree"
                              color={color}
                              size={size}
                              />
                          )}
-                         label="Users"
+                         label="Benefices"
                          onPress={() => {}}
                      />
                  </Drawer.Section>
 
-                 <Drawer.Section title="Preferences">
-                     <TouchableRipple onPress={() => {toggleTheme()}}>
-                         <View style={styles.preference}>
-                             <Text>Dark Theme</Text>
-                             <View pointerEvents="none">
-                                 <Switch value={isDarkTheme}/>
-                             </View>
-                         </View>
-                     </TouchableRipple>
-                 </Drawer.Section>
 
                  <Drawer.Section style={styles.bottomDrawerSection}>
                      <DrawerItem

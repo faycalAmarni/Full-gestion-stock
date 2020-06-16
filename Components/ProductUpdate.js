@@ -82,7 +82,7 @@ class ProductUpdate extends Component {
     return (
 
       <Container >
-        <Content style={{marginTop:20}}>
+        <Content style={{marginTop:20, padding: 16}}>
           <Form >
             <Label style={{margin:5, marginLeft:10, fontWeight:"bold"}}>Nom du produit *</Label>
             <Item rounded style={{margin:15, marginLeft:15}}>
